@@ -3,16 +3,19 @@
  this file has had many incarnations and was ported from Java. Random words are
  super-useful in testing and character generation.
  {@link http://en.wikipedia.org/wiki/Languages_constructed_by_J._R._R._Tolkien}.
+ <p>
+ ANSI C89?
 
  @author	Neil
- @version	1.0, 2016-02
+ @version	1.1, 2016-09
  @since		2014 */
 
 #include <stdlib.h> /* rand */
-#include <stdio.h>	/* snprintf */
+#include <stdio.h>	/* snprintf strlen */
 #include <ctype.h>	/* toupper */
+#include <string.h>	/* strcat, strncat */
 
-static const char *syllables[] = {
+static const char *syllable[] = {
 	"ub", "ul", "uk", "um", "uu", "oo", "ee", "uuk", "uru",
 	"ick", "gn", "ch", "ar", "eth", "ith", "ath", "uth", "yth",
 	"ur", "uk", "ug", "sna", "or", "ko", "uks", "ug", "lur", "sha", "grat",
@@ -28,9 +31,9 @@ static const char *syllables[] = {
 	"ski", "kri", "gal", "nash", "naz", "hai", "mau", "sha", "akh", "dum",
 	"olog", "lab", "lat"
 };
-static const int max_syllable_length = 4;
+static const unsigned max_syllable_length = 4;
 
-static const char *suffixes[] = {
+static const char *suffix[] = {
 	"at", "ob", "agh", "uk", "uuk", "um", "uurz", "hai", "ishi", "ub",
 	"ull", "ug", "an", "hai", "gae", "-hai", "luk", "tz", "hur", "dush",
 	"ks", "mog", "grat", "gash", "th", "on", "gul", "gae", "gun",
@@ -43,36 +46,44 @@ static const char *suffixes[] = {
 	"izg", "-izg", "ishi", "ghash", "thrakat", "thrak", "golug", "mokum",
 	"ufum", "bubhosh", "gimbat", "shai", "khalok", "kurta", "ness", "funda"
 };
-static const int max_suffix_length = 7;
+static const unsigned max_suffix_length = 7;
 
-/* a global that specifes how many bytes we should fill */
-static unsigned name_size;
-
-/** Set size of the words so that this knows when to stop. In practice, 16 gives
- a good size of string for debugging.
- @param name_size	The number of bytes */
-void OrcishSetSize(const unsigned size) {
-	name_size = size;
-}
-
-/** OrcishSetSize must be called before this to set the string size. You must
- have space for (at least) 
+/** You must have space for (at least) name_size (byte) characters.
  @param name		Filled with a random word in psudo-Orcish.
- @param name_size	sizeof(name), ideally 16; smaller is truncated, larger not
-					used. */
+ @param name_size	sizeof(name); suggest 16, which would be enough for
+ 					2 syllables and a suffix. */
 void Orcish(char *const name, const size_t name_size) {
-	const int
-		a = rand() / (RAND_MAX + 1.0) * (sizeof sylables / sizeof(char *)),
-		b = rand() / (RAND_MAX + 1.0) * (sizeof sylables / sizeof(char *)),
-		c = rand() / (RAND_MAX + 1.0) * (sizeof suffixes / sizeof(char *));
-	/* pedantically small strings */
-	if(name_size <= 0) {
+	char *str;
+	int a;
+
+	if(name_size == 0) return;
+
+	name[0] = '\0';
+
+	if(name_size == 1) {
 		return;
-	} else if(name_size == 1) {
+	} else if(name_size < max_syllable_length + 1) {
+		a = rand() / (RAND_MAX + 1.0) * (sizeof syllable / sizeof *syllable);
+		strncat(name, syllable[a], name_size - 1);
+	} else if(name_size < max_syllable_length + max_suffix_length + 1) {
+		a = rand() / (RAND_MAX + 1.0) * (sizeof syllable / sizeof *syllable);
+		str = strcat(name, syllable[a]);
+		a = rand() / (RAND_MAX + 1.0) * (sizeof syllable / sizeof *syllable);
+		strncat(str, syllable[a], name_size - strlen(name) - 1);
+	} else {
+		unsigned i, syllables;
+
+		syllables = (name_size - 1 - max_suffix_length) / max_syllable_length;
+		str = name;
 		name[0] = '\0';
-		return;
+		for(i = 0; i < syllables; i++) {
+			a = rand() / (RAND_MAX + 1.0) * (sizeof syllable/sizeof *syllable);
+			str = strcat(str, syllable[a]);
+		}
+		a = rand() / (RAND_MAX + 1.0) * (sizeof suffix / sizeof *suffix);
+		strcat(str, suffix[a]);
 	}
-	/*printf("{a,b,c} = {%d,%d,%d}\n", a, b, c);*/
-	snprintf(name, name_size, "%s%s%s", sylables[a], sylables[b], suffixes[c]);
+
 	name[0] = toupper(name[0]);
+
 }

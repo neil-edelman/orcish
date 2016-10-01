@@ -12,23 +12,23 @@
 #include <stdio.h>	/* snprintf */
 #include <ctype.h>	/* toupper */
 
-static const char *sylables[] = {
+static const char *syllables[] = {
 	"ub", "ul", "uk", "um", "uu", "oo", "ee", "uuk", "uru",
 	"ick", "gn", "ch", "ar", "eth", "ith", "ath", "uth", "yth",
 	"ur", "uk", "ug", "sna", "or", "ko", "uks", "ug", "lur", "sha", "grat",
 	"mau", "eom", "lug", "uru", "mur", "ash", "goth", "sha", "cir", "un",
 	"mor", "ann", "sna", "gor", "dru", "az", "azan", "nul", "biz", "balc",
 	"balc", "tuo", "gon", "dol", "bol", "dor", "luth", "bolg", "beo",
-	"vak", "bat", "buy", "kham", "kzam", "lg", "bo", "thi",
-	"ia", "es", "en", "ion",
-	"mok", "muk", "tuk", "gol", "fim", "ette", "moor", "goth", "gri",
+	"vak", "bat", "buy", "kham", "kzam", "lg", "bo", "thi", "ia", "es", "en",
+	"ion", "mok", "muk", "tuk", "gol", "fim", "ette", "moor", "goth", "gri",
 	"shn", "nak", "ash", "bag", "ronk", "ask", "mal", "ome", "hi",
 	"sek", "aah", "ove", "arg", "ohk", "to", "lag", "muzg", "ash", "mit",
 	"rad", "sha", "saru", "ufth", "warg", "sin", "dar", "ann", "mor", "dab",
-	"val", "dur", "dug", "bar",
-	"ash", "krul", "gakh", "kraa", "rut", "udu", "ski", "kri", "gal",
-	"nash", "naz", "hai", "mau", "sha", "akh", "dum", "olog", "lab", "lat"
+	"val", "dur", "dug", "bar", "ash", "krul", "gakh", "kraa", "rut", "udu",
+	"ski", "kri", "gal", "nash", "naz", "hai", "mau", "sha", "akh", "dum",
+	"olog", "lab", "lat"
 };
+static const int max_syllable_length = 4;
 
 static const char *suffixes[] = {
 	"at", "ob", "agh", "uk", "uuk", "um", "uurz", "hai", "ishi", "ub",
@@ -43,9 +43,21 @@ static const char *suffixes[] = {
 	"izg", "-izg", "ishi", "ghash", "thrakat", "thrak", "golug", "mokum",
 	"ufum", "bubhosh", "gimbat", "shai", "khalok", "kurta", "ness", "funda"
 };
+static const int max_suffix_length = 7;
 
-/**
- @param name		Get a random word in psudo-Orcish.
+/* a global that specifes how many bytes we should fill */
+static unsigned name_size;
+
+/** Set size of the words so that this knows when to stop. In practice, 16 gives
+ a good size of string for debugging.
+ @param name_size	The number of bytes */
+void OrcishSetSize(const unsigned size) {
+	name_size = size;
+}
+
+/** OrcishSetSize must be called before this to set the string size. You must
+ have space for (at least) 
+ @param name		Filled with a random word in psudo-Orcish.
  @param name_size	sizeof(name), ideally 16; smaller is truncated, larger not
 					used. */
 void Orcish(char *const name, const size_t name_size) {

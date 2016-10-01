@@ -7,6 +7,7 @@ VB    := 1
 # dirs
 SDIR  := src
 TDIR  := test
+GDIR  := build
 BDIR  := bin
 BACK  := backup
 
@@ -24,8 +25,8 @@ rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst 
 SRCS  := $(call rwildcard, $(SDIR), *.c)
 TEST  := $(call rwildcard, $(TDIR), *.c)
 H     := $(call rwildcard, $(SDIR), *.h)
-OBJS  := $(patsubst $(SDIR)/%.c, $(BDIR)/%.o, $(SRCS))
-TOBJS := $(patsubst $(TDIR)/%.c, $(BDIR)/%.o, $(TEST))
+OBJS  := $(patsubst $(SDIR)/%.c, $(GDIR)/%.o, $(SRCS))
+TOBJS := $(patsubst $(TDIR)/%.c, $(GDIR)/$(TDIR)/%.o, $(TEST))
 
 CC   := gcc # /usr/local/i386-mingw32-4.3.0/bin/i386-mingw32-gcc javac nxjc
 CF   := -Wall -Wextra -O3 -ffast-math -funroll-loops -pedantic -ansi # or -std=c99 -mwindows or -g:none -O -verbose -d $(BDIR) $(SDIR)/*.java -Xlint:unchecked -Xlint:deprecation
@@ -53,15 +54,17 @@ default: $(BDIR)/$(PROJ)
 
 # linking
 $(BDIR)/$(PROJ): $(OBJS) $(TOBJS)
+	@mkdir -p $(BDIR)
 	$(CC) $(CF) $(OF) $(OBJS) $(TOBJS) -o $@
 
 # compiling
-$(OBJS): $(BDIR)/%.o: $(SDIR)/%.c $(H)
-	@mkdir -p $(BDIR)
+$(OBJS): $(GDIR)/%.o: $(SDIR)/%.c $(H)
+	@mkdir -p $(GDIR)
 	$(CC) $(CF) -c $(SDIR)/$*.c -o $@
 
-$(TOBJS): $(BDIR)/%.o: $(TDIR)/%.c
-	@mkdir -p $(BDIR)
+$(TOBJS): $(GDIR)/$(TDIR)/%.o: $(TDIR)/%.c
+	@mkdir -p $(GDIR)
+	@mkdir -p $(GDIR)/$(TDIR)
 	$(CC) $(CF) -c $(TDIR)/$*.c -o $@
 
 ######
@@ -70,7 +73,8 @@ $(TOBJS): $(BDIR)/%.o: $(TDIR)/%.c
 .PHONY: setup clean backup icon
 
 clean:
-	-rm -f $(OBJS)
+	-rm -f $(OBJS) $(TOBJS)
+	-rm -rf $(BDIR)/$(TDIR)
 
 backup:
 	@mkdir -p $(BACK)

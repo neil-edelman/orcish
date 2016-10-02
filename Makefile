@@ -24,7 +24,7 @@ rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst 
 # select all automatically
 SRCS  := $(call rwildcard, $(SDIR), *.c)
 TEST  := $(call rwildcard, $(TDIR), *.c)
-H     := $(call rwildcard, $(SDIR), *.h)
+H     := $(call rwildcard, $(SDIR), *.h) $(call rwildcard, $(TDIR), *.h)
 OBJS  := $(patsubst $(SDIR)/%.c, $(GDIR)/%.o, $(SRCS))
 TOBJS := $(patsubst $(TDIR)/%.c, $(GDIR)/$(TDIR)/%.o, $(TEST))
 
@@ -62,7 +62,7 @@ $(OBJS): $(GDIR)/%.o: $(SDIR)/%.c $(H)
 	@mkdir -p $(GDIR)
 	$(CC) $(CF) -c $(SDIR)/$*.c -o $@
 
-$(TOBJS): $(GDIR)/$(TDIR)/%.o: $(TDIR)/%.c
+$(TOBJS): $(GDIR)/$(TDIR)/%.o: $(TDIR)/%.c $(H)
 	@mkdir -p $(GDIR)
 	@mkdir -p $(GDIR)/$(TDIR)
 	$(CC) $(CF) -c $(TDIR)/$*.c -o $@
@@ -78,7 +78,7 @@ clean:
 
 backup:
 	@mkdir -p $(BACK)
-	zip $(BACK)/$(INST)-`date +%Y-%m-%dT%H%M%S`$(BRGS).zip readme.txt gpl.txt copying.txt Makefile $(SRCS) $(H) $(SDIR)/$(ICON) $(EXTRA)
+	zip $(BACK)/$(INST)-`date +%Y-%m-%dT%H%M%S`$(BRGS).zip readme.txt gpl.txt copying.txt Makefile $(SRCS) $(TEST) $(H) $(SDIR)/$(ICON) $(EXTRA)
 	#git commit -am "$(ARGS)"
 
 icon: default

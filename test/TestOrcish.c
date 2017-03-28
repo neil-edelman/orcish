@@ -1,14 +1,15 @@
-/* 2016 Neil Edelman */
+/** 2016 Neil Edelman.
+
+ Test Orcish.
+
+ @title		TestOrcish
+ @author	Neil
+ @version	1.1; 2016-09
+ @since		1.0; 2016-02 */
 
 #include <stdlib.h> /* malloc free */
 #include <stdio.h>  /* fprintf */
 #include "../src/Orcish.h"
-
-/** Test Orcish.
-
- @author	Neil
- @version	1.1; 2016-09
- @since		1.0; 2016-02 */
 
 /* constants */
 static const char *programme   = "TestOrcish";

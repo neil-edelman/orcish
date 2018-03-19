@@ -2,7 +2,7 @@
 
 # https://stackoverflow.com/questions/18136918/how-to-get-current-relative-directory-of-your-makefile
 makefile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
-current_path := $(dir $(mkfile_path))
+current_path := $(dir $(makefile_path))
 current_dir := $(notdir $(patsubst %/,%,$(current_path)))
 
 PROJ  := ${current_dir}
@@ -53,6 +53,7 @@ endif
 # compiles the programme by default
 
 default: $(BDIR)/$(PROJ)
+	# $(current_dir) $(current_path) $(makefile_path)
 	# . . . success; executable is in $(BDIR)/$(PROJ)
 
 # linking

@@ -1,8 +1,11 @@
 # Makefile 1.2 (GNU Make 3.81; MacOSX gcc 4.2.1; MacOSX MinGW 4.3.0)
 
-PROJ  := TestOrcish
-VA    := 0
-VB    := 1
+# https://stackoverflow.com/questions/18136918/how-to-get-current-relative-directory-of-your-makefile
+makefile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
+current_path := $(dir $(mkfile_path))
+current_dir := $(notdir $(patsubst %/,%,$(current_path)))
+
+PROJ  := ${current_dir}
 
 # dirs
 SDIR  := src
@@ -12,7 +15,7 @@ BDIR  := bin
 BACK  := backup
 
 # files in bdir
-INST  := $(PROJ)-$(VA)_$(VB)
+INST  := $(PROJ)-`date +%Y-%m-%d`
 
 # extra stuff we should back up
 EXTRA :=
@@ -94,6 +97,6 @@ setup: default icon
 	cp $(BDIR)/$(PROJ) readme.txt gpl.txt copying.txt $(BDIR)/$(INST)
 	rm -f $(BDIR)/$(INST)-MacOSX.dmg
 	# or rm -f $(BDIR)/$(INST)-Win32.zip
-	hdiutil create $(BDIR)/$(INST)-MacOSX.dmg -volname "$(PROJ) $(VA).$(VB)" -srcfolder $(BDIR)/$(INST)
+	hdiutil create $(BDIR)/$(INST)-MacOSX.dmg -volname "$(INST)" -srcfolder $(BDIR)/$(INST)
 	# or zip $(BDIR)/$(INST)-Win32.zip -r $(BDIR)/$(INST)
 	rm -R $(BDIR)/$(INST)

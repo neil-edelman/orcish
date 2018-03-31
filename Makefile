@@ -13,6 +13,7 @@ TDIR  := test
 GDIR  := build
 BDIR  := bin
 BACK  := backup
+DDIR  := doc
 
 # files in bdir
 INST  := $(PROJ)-`date +%Y-%m-%d`
@@ -30,10 +31,12 @@ TEST  := $(call rwildcard, $(TDIR), *.c)
 H     := $(call rwildcard, $(SDIR), *.h) $(call rwildcard, $(TDIR), *.h)
 OBJS  := $(patsubst $(SDIR)/%.c, $(GDIR)/%.o, $(SRCS))
 TOBJS := $(patsubst $(TDIR)/%.c, $(GDIR)/$(TDIR)/%.o, $(TEST))
+DOCS  := $(patsubst $(SDIR)/%.c, $(DDIR)/%.html, $(SRCS))
 
 CC   := gcc # /usr/local/i386-mingw32-4.3.0/bin/i386-mingw32-gcc javac nxjc
 CF   := -Wall -Wextra -O3 -ffast-math -funroll-loops -pedantic -ansi # or -std=c99 -mwindows or -g:none -O -verbose -d $(BDIR) $(SDIR)/*.java -Xlint:unchecked -Xlint:deprecation
 OF   := # -framework OpenGL -framework GLUT or -lglut -lGLEW
+CDOC := cdoc
 
 # props Jakob Borg and Eldar Abusalimov
 # $(ARGS) is all the extra arguments
@@ -56,6 +59,9 @@ default: $(BDIR)/$(PROJ)
 	# $(current_dir) $(current_path) $(makefile_path)
 	# . . . success; executable is in $(BDIR)/$(PROJ)
 
+docs: $(DOCS)
+	# Done.
+
 # linking
 $(BDIR)/$(PROJ): $(OBJS) $(TOBJS)
 	@mkdir -p $(BDIR)
@@ -71,10 +77,16 @@ $(TOBJS): $(GDIR)/$(TDIR)/%.o: $(TDIR)/%.c $(H)
 	@mkdir -p $(GDIR)/$(TDIR)
 	$(CC) $(CF) -c $(TDIR)/$*.c -o $@
 
+$(DOCS): $(DDIR)/%.html: $(SDIR)/%.h $(SDIR)/%.c
+	# docs rule
+	@mkdir -p $(DDIR)
+	-cat $^ | $(CDOC) > $@
+	-cat $^ | $(CDOC) text > $(DDIR)/$*.txt
+
 ######
 # phoney targets
 
-.PHONY: setup clean backup icon
+.PHONY: setup clean backup icon docs
 
 clean:
 	-rm -f $(OBJS) $(TOBJS)

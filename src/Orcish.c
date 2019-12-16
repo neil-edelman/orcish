@@ -9,7 +9,8 @@
  ](http://en.wikipedia.org/wiki/Languages_constructed_by_J._R._R._Tolkien).
  Random words are super-useful in testing.
 
- @std C89 */
+ @std C89
+ @cf [Set](../../Set/) */
 
 #include <stdlib.h> /* rand */
 #include <stdio.h>  /* strlen */

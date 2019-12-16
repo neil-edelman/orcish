@@ -33,7 +33,13 @@ Orcish words are gathered off the Internet, SMAUG1\.8, made up myself, _etc_\. T
 
 <code>void <strong>Orcish</strong>(char *const <em>name</em>, size_t <em>name_size</em>)</code>
 
-Fills `name`, potentially up to `name_size`, \(including the null,\) with a random Orcish name\. Uses `rand` from `stdlib.h`\.
+Fills `name` with a random Orcish name\. Potentially up to `name_size` \- 1, then puts a null terminator\. Uses `rand` from `stdlib.h`\.
+
+ * Parameter: _name_  
+   If null, does nothing\.
+ * Parameter: _name\_size_  
+   If 0, does nothing\.
+
 
 
 

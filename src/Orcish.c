@@ -10,7 +10,7 @@
  Random words are super-useful in testing.
 
  @std C89
- @cf [Set](../../Set/) */
+ @cf [Set](https://github.com/neil-edelman/Set) */
 
 #include <stdlib.h> /* rand */
 #include <stdio.h>  /* strlen */

@@ -53,13 +53,15 @@ static const unsigned suffixes_max_length = 7;
 
 static const unsigned max_name_size = 256;
 
-/** Fills `name`, potentially up to `name_size`, (including the null,) with
- a random Orcish name. Uses `rand` from `stdlib.h`. */
+/** Fills `name` with a random Orcish name. Potentially up to `name_size` - 1,
+ then puts a null terminator. Uses `rand` from `stdlib.h`.
+ @param[name] If null, does nothing.
+ @param[name_size] If 0, does nothing. */
 void Orcish(char *const name, size_t name_size) {
 	char *n = name;
 	const char *part;
 	size_t part_len;
-	if(name_size == 0) return;
+	if(!name_size || !name) return;
 	if(name_size == 1) { *n = '\0'; return; }
 	if(name_size > max_name_size) name_size = max_name_size;
 	/* Now `name_size \in [2, max_name_size]`. */

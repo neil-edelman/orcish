@@ -9,7 +9,7 @@
  Orcish names are gathered off the Internet, SMAUG1.8, made up myself,
  _etc_. They originate or are inspired by [JRR Tolkien's Orcish
  ](http://en.wikipedia.org/wiki/Languages_constructed_by_J._R._R._Tolkien).
- Random words are super-useful in testing.
+ Random names are super-useful in testing.
 
  @std C89
  @cf [Array](https://github.com/neil-edelman/Array)

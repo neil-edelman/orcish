@@ -2,7 +2,7 @@
  [MIT License](https://opensource.org/licenses/MIT). Contains some syllables
  from [SMAUG](http://www.smaug.org/), which is a derivative of
  [Merc](http://dikumud.com/Children/merc2.asp), and
- [DikuMud](http://dikumud.com/), used under fair-use.
+ [DikuMud](http://dikumud.com/); used under fair-use.
 
  @subtitle Random Name Generator
 

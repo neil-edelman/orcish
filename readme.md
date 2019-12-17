@@ -42,7 +42,7 @@ Fills `name` with a random Orcish name\. Potentially up to `name_size` \- 1, the
  * Parameter: _name_  
    If null, does nothing\.
  * Parameter: _name\_size_  
-   If 0, does nothing\.
+   If zero, does nothing\.
 
 
 

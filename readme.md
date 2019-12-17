@@ -12,7 +12,7 @@ Orcish words are gathered off the Internet, SMAUG1\.8, made up myself, _etc_\. T
  * Standard:  
    C89
  * See also:  
-   [Set](https://github.com/neil-edelman/Set)
+   [Array](https://github.com/neil-edelman/Array); [Digraph](https://github.com/neil-edelman/Digraph); [List](https://github.com/neil-edelman/List); [Pool](https://github.com/neil-edelman/Pool); [Set](https://github.com/neil-edelman/Set)
 
 
 

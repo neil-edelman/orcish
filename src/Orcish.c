@@ -1,8 +1,10 @@
 /** @license 2014 Neil Edelman, distributed under the terms of the
- [MIT License](https://opensource.org/licenses/MIT). Contains syllables from
- [SMAUG](http://www.smaug.org/), which is a derivative of
+ [MIT License](https://opensource.org/licenses/MIT). Contains some syllables
+ from [SMAUG](http://www.smaug.org/), which is a derivative of
  [Merc](http://dikumud.com/Children/merc2.asp), and
  [DikuMud](http://dikumud.com/), used under fair-use.
+
+ @subtitle Random Name Generator
 
  Orcish words are gathered off the Internet, SMAUG1.8, made up myself,
  _etc_. They originate or are inspired by [JRR Tolkien's Orcish

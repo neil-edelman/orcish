@@ -1,5 +1,7 @@
 # Orcish\.c #
 
+## Random Name Generator ##
+
  * [Description](#user-content-preamble)
  * [Function Summary](#user-content-summary)
  * [Function Definitions](#user-content-fn)
@@ -49,7 +51,7 @@ Fills `name` with a random Orcish name\. Potentially up to `name_size` \- 1, the
 
 ## <a id = "user-content-license" name = "user-content-license">License</a> ##
 
-2014 Neil Edelman, distributed under the terms of the [MIT License](https://opensource.org/licenses/MIT)\. Contains syllables from [SMAUG](http://www.smaug.org/), which is a derivative of [Merc](http://dikumud.com/Children/merc2.asp), and [DikuMud](http://dikumud.com/), used under fair\-use\.
+2014 Neil Edelman, distributed under the terms of the [MIT License](https://opensource.org/licenses/MIT)\. Contains some syllables from [SMAUG](http://www.smaug.org/), which is a derivative of [Merc](http://dikumud.com/Children/merc2.asp), and [DikuMud](http://dikumud.com/), used under fair\-use\.
 
 
 

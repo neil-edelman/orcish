@@ -23,7 +23,7 @@
 #include <stdio.h>  /* strlen */
 #include <ctype.h>  /* toupper */
 #include <string.h> /* memcpy */
-#include <assert.h>
+#include <assert.h> /* assert */
 #include "orcish.h"
 
 static const char *syllables[] = {

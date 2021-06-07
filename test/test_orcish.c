@@ -11,8 +11,7 @@
 #include <stdio.h>  /* fprintf */
 #include "../src/orcish.h"
 
-/** Entry point.
- @return Either EXIT_SUCCESS or EXIT_FAILURE. */
+/** @return Zero. */
 int main(void) {
 	int i;
 	char test1[1], test2[2], test5[5], test11[11], test16[16], test256[256];

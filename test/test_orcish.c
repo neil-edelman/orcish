@@ -18,16 +18,16 @@ int main(void) {
 
 	for(i = 0; i < 512; i++) {
 		/* white-box: branch [1] */
-		Orcish(test1, sizeof test1);
+		orcish(test1, sizeof test1);
 		/* white-box: branch [2-4] */
-		Orcish(test2, sizeof test2);
+		orcish(test2, sizeof test2);
 		/* white-box: branch [5-11] */
-		Orcish(test5, sizeof test5);
+		orcish(test5, sizeof test5);
 		/* white-box: branch [5-11] */
-		Orcish(test11, sizeof test11);
+		orcish(test11, sizeof test11);
 		/* white-box: branch [12-] */
-		Orcish(test16, sizeof test16);
-		Orcish(test256, sizeof test256);
+		orcish(test16, sizeof test16);
+		orcish(test256, sizeof test256);
 		printf("<%s> <%s> <%s> <%s> <%s> <%s>\n", test1, test2, test5, test11,
 			test16, test256);
 	}

@@ -11,12 +11,12 @@
  ](http://en.wikipedia.org/wiki/Languages_constructed_by_J._R._R._Tolkien).
 
  @std C89
- @cf [Array](https://github.com/neil-edelman/Array)
- @cf [Heap](https://github.com/neil-edelman/Heap)
- @cf [List](https://github.com/neil-edelman/List)
- @cf [Pool](https://github.com/neil-edelman/Pool)
- @cf [Set](https://github.com/neil-edelman/Set)
- @cf [Trie](https://github.com/neil-edelman/Trie) */
+ @cf [array](https://github.com/neil-edelman/array)
+ @cf [heap](https://github.com/neil-edelman/heap)
+ @cf [list](https://github.com/neil-edelman/list)
+ @cf [pool](https://github.com/neil-edelman/pool)
+ @cf [set](https://github.com/neil-edelman/set)
+ @cf [trie](https://github.com/neil-edelman/trie) */
 
 #include <stdlib.h> /* rand */
 #include <stdio.h>  /* strlen */

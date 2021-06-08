@@ -26,12 +26,12 @@
 		padding:          4px;
 	}
 </style>
-<title>Orcish.c</title>
+<title>orcish.c</title>
 </head>
 
 <body>
 
-<h1>Orcish.c</h1>
+<h1>orcish.c</h1>
 
 <h2>Random Name Generator</h2>
 
@@ -46,7 +46,7 @@
 
 <h2><a id = "preamble:" name = "preamble:">Description</a></h2>
 
-<p>Orcish names are gathered off the Internet, SMAUG1.8, made up myself, <em>etc</em>. They originate or are inspired by <a href = "http://en.wikipedia.org/wiki/Languages_constructed_by_J._R._R._Tolkien">JRR Tolkien's Orcish</a>. Random names are super-useful in testing.</p>
+<p>Orcish names are gathered off the Internet, SMAUG1.8, made up myself, <em>etc</em>. They originate or are inspired by <a href = "http://en.wikipedia.org/wiki/Languages_constructed_by_J._R._R._Tolkien">JRR Tolkien's Orcish</a>.</p>
 
 <dl>
 	<dt>Standard:</dt>
@@ -65,7 +65,7 @@
 
 <tr><th>Modifiers</th><th>Function Name</th><th>Argument List</th></tr>
 
-<tr><td align = right>void</td><td><a href = "#fn:Orcish">Orcish</a></td><td>name, name_size</td></tr>
+<tr><td align = right>void</td><td><a href = "#fn:orcish">orcish</a></td><td>name, name_size</td></tr>
 
 </table>
 
@@ -77,15 +77,13 @@
 
 <div>
 
-<h3><a id = "fn:Orcish" name = "fn:Orcish">Orcish</a></h3>
+<h3><a id = "fn:orcish" name = "fn:orcish">orcish</a></h3>
 
-<p><code>void <strong>Orcish</strong>(char *const <em>name</em>, size_t <em>name_size</em>)</code></p>
+<p><code>void <strong>orcish</strong>(char *const <em>name</em>, size_t <em>name_size</em>)</code></p>
 
 <p>Fills <code>name</code> with a random Orcish name. Potentially up to <code>name_size</code> - 1, then puts a null terminator. Uses <code>rand</code> from <code>stdlib.h</code>.</p>
 
 <dl>
-	<dt>Parameter: <em>name</em></dt>
-	<dd>If null, does nothing.</dd>
 	<dt>Parameter: <em>name_size</em></dt>
 	<dd>If zero, does nothing.</dd>
 </dl>

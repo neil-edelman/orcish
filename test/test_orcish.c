@@ -1,11 +1,12 @@
-/** 2016 Neil Edelman.
+/** @license 2014 Neil Edelman, distributed under the terms of the
+ [MIT License](https://opensource.org/licenses/MIT).
 
  Test Orcish.
 
- @title		TestOrcish
- @author	Neil
- @version	1.1; 2016-09
- @since		1.0; 2016-02 */
+ @title TestOrcish
+ @author Neil
+ @version 2016-09
+ @since 2016-02 */
 
 #include <stdlib.h> /* malloc free */
 #include <stdio.h>  /* fprintf */

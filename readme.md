@@ -13,8 +13,6 @@ Orcish names are gathered off the Internet, SMAUG1\.8, made up myself, _etc_\. T
 
  * Standard:  
    C89
- * See also:  
-   [array](https://github.com/neil-edelman/array); [heap](https://github.com/neil-edelman/heap); [list](https://github.com/neil-edelman/list); [pool](https://github.com/neil-edelman/pool); [set](https://github.com/neil-edelman/set); [trie](https://github.com/neil-edelman/trie)
 
 
 

@@ -27,6 +27,8 @@ Orcish names are gathered off the Internet, SMAUG1\.8, made up myself, _etc_\. T
 
 <tr><td align = right>void</td><td><a href = "#user-content-fn-9f378872">orcish_ptr</a></td><td>name, name_size, p</td></tr>
 
+<tr><td align = right>const char *</td><td><a href = "#user-content-fn-a01df6a5">orc</a></td><td>p</td></tr>
+
 </table>
 
 
@@ -54,6 +56,14 @@ Fills `name` with a deterministic Orcish name based on `p`\. Potentially up to `
  * Parameter: _name\_size_  
    If zero, does nothing\.
 
+
+
+
+### <a id = "user-content-fn-a01df6a5" name = "user-content-fn-a01df6a5">orc</a> ###
+
+<code>const char *<strong>orc</strong>(const void *const <em>p</em>)</code>
+
+Fills a static buffer of up to four names with a deterministic Orcish name based on `p` with [orcish_ptr](#user-content-fn-9f378872)\.
 
 
 

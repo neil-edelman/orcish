@@ -41,8 +41,8 @@ int main(void) {
 		orcish_ptr(test11, sizeof test11, test11);
 		orcish_ptr(test16, sizeof test16, test16);
 		orcish_ptr(test256, sizeof test256, test256);
-		printf("<%s> <%s> <%s> <%s> <%s> <%s>\n", test1, test2, test5, test11,
-			test16, test256);
+		printf("ptr: <%s> <%s> <%s> <%s> <%s> <%s>\n",
+			test1, test2, test5, test11, test16, test256);
 		orcish_ptr(test_ver, sizeof test1, test1);
 		assert(!strcmp(test1, test_ver));
 		orcish_ptr(test_ver, sizeof test2, test2);
@@ -55,6 +55,24 @@ int main(void) {
 		assert(!strcmp(test16, test_ver));
 		orcish_ptr(test_ver, sizeof test256, test256);
 		assert(!strcmp(test256, test_ver));
+	}
+
+	{
+		const char *a, *b;
+		a = orc(test1), b = orc(test1);
+		printf("<%s> == <%s>\n", a, b), assert(!strcmp(a, b));
+		a = orc(test2), b = orc(test2);
+		printf("<%s> == <%s>\n", a, b), assert(!strcmp(a, b));
+		a = orc(test5), b = orc(test5);
+		printf("<%s> == <%s>\n", a, b), assert(!strcmp(a, b));
+		a = orc(test11), b = orc(test11);
+		printf("<%s> == <%s>\n", a, b), assert(!strcmp(a, b));
+		a = orc(test16), b = orc(test16);
+		printf("<%s> == <%s>\n", a, b), assert(!strcmp(a, b));
+		a = orc(test256), b = orc(test256);
+		printf("<%s> == <%s>\n", a, b), assert(!strcmp(a, b));
+		a = orc(0), b = orc(0);
+		printf("<%s> == <%s>\n", a, b), assert(!strcmp(a, b));
 	}
 
 	return EXIT_SUCCESS;

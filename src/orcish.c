@@ -122,6 +122,6 @@ void orcish(char *const name, const size_t name_size)
 /** Fills `name` with a deterministic Orcish name based on `p`. Potentially up
  to `name_size` - 1, then puts a null terminator. Uses `MurmurHash3Mixer`.
  @param[name_size] If zero, does nothing. */
-void orcish_pointer(char *const name, const size_t name_size,
+void orcish_ptr(char *const name, const size_t name_size,
 	const void *const p)
 	{ orcish_recur(name, name_size, (unsigned long)p, &MurmurHash3Mixer); }

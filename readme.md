@@ -25,7 +25,7 @@ Orcish names are gathered off the Internet, SMAUG1\.8, made up myself, _etc_\. T
 
 <tr><td align = right>void</td><td><a href = "#user-content-fn-3a1dca27">orcish</a></td><td>name, name_size</td></tr>
 
-<tr><td align = right>void</td><td><a href = "#user-content-fn-ebd54189">orcish_pointer</a></td><td>name, name_size, p</td></tr>
+<tr><td align = right>void</td><td><a href = "#user-content-fn-9f378872">orcish_ptr</a></td><td>name, name_size, p</td></tr>
 
 </table>
 
@@ -45,9 +45,9 @@ Fills `name` with a random Orcish name\. Potentially up to `name_size` \- 1, the
 
 
 
-### <a id = "user-content-fn-ebd54189" name = "user-content-fn-ebd54189">orcish_pointer</a> ###
+### <a id = "user-content-fn-9f378872" name = "user-content-fn-9f378872">orcish_ptr</a> ###
 
-<code>void <strong>orcish_pointer</strong>(char *const <em>name</em>, const size_t <em>name_size</em>, const void *const <em>p</em>)</code>
+<code>void <strong>orcish_ptr</strong>(char *const <em>name</em>, const size_t <em>name_size</em>, const void *const <em>p</em>)</code>
 
 Fills `name` with a deterministic Orcish name based on `p`\. Potentially up to `name_size` \- 1, then puts a null terminator\. Uses `MurmurHash3Mixer`\.
 

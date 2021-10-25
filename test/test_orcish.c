@@ -35,25 +35,25 @@ int main(void) {
 	}
 
 	{
-		orcish_pointer(test1, sizeof test1, test1);
-		orcish_pointer(test2, sizeof test2, test2);
-		orcish_pointer(test5, sizeof test5, test5);
-		orcish_pointer(test11, sizeof test11, test11);
-		orcish_pointer(test16, sizeof test16, test16);
-		orcish_pointer(test256, sizeof test256, test256);
+		orcish_ptr(test1, sizeof test1, test1);
+		orcish_ptr(test2, sizeof test2, test2);
+		orcish_ptr(test5, sizeof test5, test5);
+		orcish_ptr(test11, sizeof test11, test11);
+		orcish_ptr(test16, sizeof test16, test16);
+		orcish_ptr(test256, sizeof test256, test256);
 		printf("<%s> <%s> <%s> <%s> <%s> <%s>\n", test1, test2, test5, test11,
 			test16, test256);
-		orcish_pointer(test_ver, sizeof test1, test1);
+		orcish_ptr(test_ver, sizeof test1, test1);
 		assert(!strcmp(test1, test_ver));
-		orcish_pointer(test_ver, sizeof test2, test2);
+		orcish_ptr(test_ver, sizeof test2, test2);
 		assert(!strcmp(test2, test_ver));
-		orcish_pointer(test_ver, sizeof test5, test5);
+		orcish_ptr(test_ver, sizeof test5, test5);
 		assert(!strcmp(test5, test_ver));
-		orcish_pointer(test_ver, sizeof test11, test11);
+		orcish_ptr(test_ver, sizeof test11, test11);
 		assert(!strcmp(test11, test_ver));
-		orcish_pointer(test_ver, sizeof test16, test16);
+		orcish_ptr(test_ver, sizeof test16, test16);
 		assert(!strcmp(test16, test_ver));
-		orcish_pointer(test_ver, sizeof test256, test256);
+		orcish_ptr(test_ver, sizeof test256, test256);
 		assert(!strcmp(test256, test_ver));
 	}
 

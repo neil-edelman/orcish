@@ -65,7 +65,7 @@
 
 <tr><td align = right>void</td><td><a href = "#fn:orcish">orcish</a></td><td>name, name_size</td></tr>
 
-<tr><td align = right>void</td><td><a href = "#fn:orcish_pointer">orcish_pointer</a></td><td>name, name_size, p</td></tr>
+<tr><td align = right>void</td><td><a href = "#fn:orcish_ptr">orcish_ptr</a></td><td>name, name_size, p</td></tr>
 
 </table>
 
@@ -92,9 +92,9 @@
 
 <div>
 
-<h3><a id = "fn:orcish_pointer" name = "fn:orcish_pointer">orcish_pointer</a></h3>
+<h3><a id = "fn:orcish_ptr" name = "fn:orcish_ptr">orcish_ptr</a></h3>
 
-<p><code>void <strong>orcish_pointer</strong>(char *const <em>name</em>, const size_t <em>name_size</em>, const void *const <em>p</em>)</code></p>
+<p><code>void <strong>orcish_ptr</strong>(char *const <em>name</em>, const size_t <em>name_size</em>, const void *const <em>p</em>)</code></p>
 
 <p>Fills <code>name</code> with a deterministic Orcish name based on <code>p</code>. Potentially up to <code>name_size</code> - 1, then puts a null terminator. Uses <code>MurmurHash3Mixer</code>.</p>
 

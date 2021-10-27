@@ -16,9 +16,10 @@ int main(void) {
 		test_ver[256];
 
 	assert(sizeof test_ver >= sizeof test256); /* _Etc_. */
-	/* What tests can we run? See if they are valid strings, or else in danger
-	 of crashing? */
-	for(i = 0; i < 16; i++) {
+
+	orcish(test1, 0);
+
+	for(i = 0; i < 8; i++) {
 		orcish(test1, sizeof test1);
 		orcish(test2, sizeof test2);
 		orcish(test5, sizeof test5);
@@ -50,16 +51,6 @@ int main(void) {
 		assert(!strcmp(test16, test_ver));
 		orcish_ptr(test_ver, sizeof test256, test256);
 		assert(!strcmp(test256, test_ver));
-
-		orcish_int(test256, sizeof test256, 8128);
-		orcish_int(test_ver, sizeof test256, 8128);
-		printf("int: <%s>\n", test256);
-		assert(!strcmp(test256, test_ver));
-
-		orcish_long(test256, sizeof test256, 8128);
-		orcish_long(test_ver, sizeof test256, 8128);
-		printf("long: <%s>\n", test256);
-		assert(!strcmp(test256, test_ver));
 	}
 
 	{
@@ -77,12 +68,6 @@ int main(void) {
 		a = orc(test256), b = orc(test256);
 		printf("<%s> == <%s>\n", a, b), assert(!strcmp(a, b));
 		a = orc(0), b = orc(0);
-		printf("<%s> == <%s>\n", a, b), assert(!strcmp(a, b));
-
-		a = orc_int(42), b = orc_int(42);
-		printf("<%s> == <%s>\n", a, b), assert(!strcmp(a, b));
-
-		a = orc_long(42), b = orc_long(42);
 		printf("<%s> == <%s>\n", a, b), assert(!strcmp(a, b));
 	}
 

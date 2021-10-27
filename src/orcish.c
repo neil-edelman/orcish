@@ -56,11 +56,6 @@ static const unsigned suffixes_max_length = 7;
 
 static const unsigned max_name_size = 256;
 
-/* Temporary values when assigning an orcish name to some numerical value. */
-static char strs[4][12];
-static const unsigned strs_size = sizeof strs /sizeof *strs;
-static unsigned str;
-
 /** Fills `name` with a random Orcish name. Potentially up to `name_size` - 1,
  (if zero, does nothing) then puts a null terminator. Uses `r` plugged into
  `recur` to generate random values in the range of `RAND_MAX`. */
@@ -146,44 +141,16 @@ void orcish_ptr(char *const name, const size_t name_size,
 		}
 		name[name_size < 5 ? name_size - 1 : 4] = '\0';
 	} else {
-		orcish_long(name, name_size, (unsigned long)p);
+		orcish_recur(name, name_size, (unsigned long)p, &murmur_recur);
 	}
 }
-
-/** Fills `name` with a deterministic Orcish name based on `i`. Potentially up
- to `name_size` - 1, then puts a null terminator.
- @param[name_size] If zero, does nothing. */
-void orcish_int(char *const name, const size_t name_size,
-	const unsigned i)
-	{ orcish_recur(name, name_size, (unsigned long)i, &murmur_recur); }
-
-/** Fills `name` with a deterministic Orcish name based on `l`. Potentially up
- to `name_size` - 1, then puts a null terminator.
- @param[name_size] If zero, does nothing. */
-void orcish_long(char *const name, const size_t name_size,
-	const unsigned long l)
-	{ orcish_recur(name, name_size, l, &murmur_recur); }
 
 /** Fills a static buffer of up to four names with a deterministic Orcish name
  based on `p` with <fn:orcish_ptr>. */
 const char *orc(const void *const p) {
-	str %= strs_size;
+	static char strs[4][12];
+	static unsigned str;
+	str %= sizeof strs / sizeof *strs;
 	orcish_ptr(strs[str], sizeof *strs, p);
-	return strs[str++];
-}
-
-/** Fills a static buffer of up to four names with a deterministic Orcish name
- based on `i`. */
-const char *orc_int(const unsigned i) {
-	str %= strs_size;
-	orcish_int(strs[str], sizeof *strs, i);
-	return strs[str++];
-}
-
-/** Fills a static buffer of up to four names with a deterministic Orcish name
- based on `l`. */
-const char *orc_long(const unsigned long l) {
-	str %= strs_size;
-	orcish_long(strs[str], sizeof *strs, l);
 	return strs[str++];
 }

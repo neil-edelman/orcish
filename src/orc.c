@@ -15,17 +15,13 @@
 
  @std C89 */
 
-/* This should be set to `sizeof(unsigned long) * CHAR_BIT`, or less, but it
- decreases the entropy of the random bits. */
-#define ORC_LEQ_LONG_BITS 64
-
 #include "orc.h"
 #include <stdlib.h> /* rand */
 #include <stdio.h>  /* strlen */
 #include <ctype.h>  /* toupper */
 #include <string.h> /* memcpy */
 #include <assert.h> /* assert */
-#include <limits.h> /* CHAR_BIT */
+#include <limits.h> /* CHAR_BIT, ULONG_MAX */
 
 static const char *syllables[] = {
 	"ub", "ul", "uk", "um", "uu", "oo", "ee", "uuk", "uru", "ick", "gn", "ch",
@@ -63,7 +59,6 @@ static const unsigned max_name_size = 256;
 
 #define ORC_SAMPLE(array, seed) (assert((seed) <= RAND_MAX), \
 	(array)[(seed) / (RAND_MAX / (sizeof (array) / sizeof *(array)) + 1)])
-
 /** Fills `name` with a random Orcish name. Potentially up to `name_size` - 1,
  (if zero, does nothing) then puts a null terminator. Uses `r` plugged into
  `recur` to generate random values in the range of `[0, RAND_MAX]`. */
@@ -103,14 +98,23 @@ static void orcish(char *const name, size_t name_size,
 	*n = '\0';
 	*name = (char)toupper((unsigned char)*name);
 }
-
 #undef ORC_RAND
 
-/* Murmur callbacks. */
-#if ORC_LEQ_LONG_BITS
+#if ULONG_MAX <= 0xffffffff || ULONG_MAX < 0xffffffffffffffff
+/** <https://github.com/aappleby/smhasher> `src/MurmurHash3.cpp fmix32`.
+ @return Recurrence on `h`. */
+static unsigned long fmix(unsigned long h) {
+	h ^= h >> 16;
+	h *= 0x85ebca6b;
+	h ^= h >> 13;
+	h *= 0xc2b2ae35;
+	h ^= h >> 16;
+	return h;
+}
+#else /* long --><!-- !long */
 /** <https://github.com/aappleby/smhasher> `src/MurmurHash3.cpp fmix64`.
  @return Recurrence on `k`. */
-static unsigned long fmix_long(unsigned long k) {
+static unsigned long fmix(unsigned long k) {
 	k ^= k >> 33;
 	k *= 0xff51afd7ed558ccd;
 	k ^= k >> 33;
@@ -118,14 +122,12 @@ static unsigned long fmix_long(unsigned long k) {
 	k ^= k >> 33;
 	return k;
 }
-#else
-#error Get more mixing functions.
-#endif
+#endif /* !long --> */
 
 /* Advances `r`.
  @return Number in `[0, RAND_MAX]`. @implements `orcish` */
 static unsigned murmur_callback(unsigned long *const r)
-	{ return (*r = fmix_long(*r)) % (1lu + RAND_MAX); }
+	{ return (*r = fmix(*r)) % (1lu + RAND_MAX); }
 
 /** Uses `rand`; ignores `r` and uses a global variable set by `srand`.
  @return Number in `[0, RAND_MAX]`. @implements `orcish` */
@@ -166,10 +168,7 @@ void orc_ptr(char *const name, const size_t name_size, const void *const p) {
 /** Call <fn:orc_ptr> with `p` with default values and a small temporary buffer.
  @return A temporary string; can handle four names at a time. */
 const char *orcify(const void *const p) {
-	/* If one gets a compile error, then choose another `ORC_LEQ_LONG_BITS` at
-	 the beginning of the file. */
-	static char names[4
-		* (sizeof(unsigned long) * CHAR_BIT >= ORC_LEQ_LONG_BITS)][10];
+	static char names[4][10];
 	static unsigned n;
 	n %= sizeof names / sizeof *names;
 	orc_ptr(names[n], sizeof *names, p);

@@ -61,7 +61,7 @@ static const unsigned suffixes_max_length = 7;
 
 static const unsigned max_name_size = 256;
 
-#define ORC_CHOOSE(array, seed) (assert((seed) <= RAND_MAX), \
+#define ORC_SAMPLE(array, seed) (assert((seed) <= RAND_MAX), \
 	(array)[(seed) / (RAND_MAX / (sizeof (array) / sizeof *(array)) + 1)])
 
 /** Fills `name` with a random Orcish name. Potentially up to `name_size` - 1,
@@ -78,12 +78,12 @@ static void orcish(char *const name, size_t name_size,
 	else if(name_size > max_name_size) { name_size = max_name_size; }
 	/* Now `name_size \in [2, max_name_size]`. */
 	if(name_size <= syllables_max_length + suffixes_max_length) {
-		part = ORC_CHOOSE(syllables, recur(&r));
+		part = ORC_SAMPLE(syllables, recur(&r));
 		part_len = strlen(part);
 		if(part_len >= name_size) part_len = name_size - 1;
 		memcpy(n, part, part_len), n += part_len, name_size -= part_len;
 		if(name_size > suffixes_max_length) {
-			part = ORC_CHOOSE(suffixes, recur(&r));
+			part = ORC_SAMPLE(suffixes, recur(&r));
 			part_len = strlen(part);
 			memcpy(n, part, part_len), n += part_len, name_size -= part_len;
 		}
@@ -91,12 +91,12 @@ static void orcish(char *const name, size_t name_size,
 		unsigned no_syllables = ((unsigned)name_size - 1 - suffixes_max_length)
 			/ syllables_max_length;
 		while(no_syllables) {
-			part = ORC_CHOOSE(syllables, recur(&r));
+			part = ORC_SAMPLE(syllables, recur(&r));
 			part_len = strlen(part);
 			memcpy(n, part, part_len), n += part_len, name_size -= part_len;
 			no_syllables--;
 		}
-		part = ORC_CHOOSE(suffixes, recur(&r));
+		part = ORC_SAMPLE(suffixes, recur(&r));
 		part_len = strlen(part);
 		memcpy(n, part, part_len), n += part_len, name_size -= part_len;
 	}

@@ -9,16 +9,23 @@
  @subtitle Name Generator
 
  Orcish names originate or are inspired by [JRR Tolkien's Orcish
- ](http://en.wikipedia.org/wiki/Languages_constructed_by_J._R._R._Tolkien).
+ ](http://en.wikipedia.org/wiki/Languages_constructed_by_J._R._R._Tolkien). Use
+ <fn:orc_name> to fill a memory location with an Orcish name, or <fn:orcify> to
+ assign a deterministic name to a pointer.
 
  @std C89 */
 
+/* This should be set to `sizeof(unsigned long) * CHAR_BIT`, or less, but it
+ decreases the entropy of the random bits. */
+#define ORC_LEQ_LONG_BITS 64
+
+#include "orc.h"
 #include <stdlib.h> /* rand */
 #include <stdio.h>  /* strlen */
 #include <ctype.h>  /* toupper */
 #include <string.h> /* memcpy */
 #include <assert.h> /* assert */
-#include "orcish.h"
+#include <limits.h> /* CHAR_BIT */
 
 static const char *syllables[] = {
 	"ub", "ul", "uk", "um", "uu", "oo", "ee", "uuk", "uru", "ick", "gn", "ch",
@@ -35,7 +42,6 @@ static const char *syllables[] = {
 	"udu", "ski", "kri", "gal", "nash", "naz", "hai", "mau", "sha", "akh",
 	"dum", "olog", "lab", "lat"
 };
-static const unsigned syllables_size = sizeof syllables / sizeof *syllables;
 static const unsigned syllables_max_length = 4;
 
 static const char *suffixes[] = {
@@ -51,15 +57,17 @@ static const char *suffixes[] = {
 	"thrak", "golug", "mokum", "ufum", "bubhosh", "gimbat", "shai", "khalok",
 	"kurta", "ness", "funda"
 };
-static const unsigned suffixes_size = sizeof suffixes / sizeof *suffixes;
 static const unsigned suffixes_max_length = 7;
 
 static const unsigned max_name_size = 256;
 
+#define ORC_CHOOSE(array, seed) (assert((seed) <= RAND_MAX), \
+	(array)[(seed) / (RAND_MAX / (sizeof (array) / sizeof *(array)) + 1)])
+
 /** Fills `name` with a random Orcish name. Potentially up to `name_size` - 1,
  (if zero, does nothing) then puts a null terminator. Uses `r` plugged into
- `recur` to generate random values in the range of `RAND_MAX`. */
-static void orcish_recur(char *const name, size_t name_size,
+ `recur` to generate random values in the range of `[0, RAND_MAX]`. */
+static void orcish(char *const name, size_t name_size,
 	unsigned long r, unsigned (*recur)(unsigned long *)) {
 	char *n = name;
 	const char *part;
@@ -70,12 +78,12 @@ static void orcish_recur(char *const name, size_t name_size,
 	else if(name_size > max_name_size) { name_size = max_name_size; }
 	/* Now `name_size \in [2, max_name_size]`. */
 	if(name_size <= syllables_max_length + suffixes_max_length) {
-		part = syllables[recur(&r) / (RAND_MAX / syllables_size + 1)];
+		part = ORC_CHOOSE(syllables, recur(&r));
 		part_len = strlen(part);
 		if(part_len >= name_size) part_len = name_size - 1;
 		memcpy(n, part, part_len), n += part_len, name_size -= part_len;
 		if(name_size > suffixes_max_length) {
-			part = suffixes[recur(&r) / (RAND_MAX / suffixes_size + 1)];
+			part = ORC_CHOOSE(suffixes, recur(&r));
 			part_len = strlen(part);
 			memcpy(n, part, part_len), n += part_len, name_size -= part_len;
 		}
@@ -83,19 +91,23 @@ static void orcish_recur(char *const name, size_t name_size,
 		unsigned no_syllables = ((unsigned)name_size - 1 - suffixes_max_length)
 			/ syllables_max_length;
 		while(no_syllables) {
-			part = syllables[recur(&r) / (RAND_MAX / syllables_size +1)];
+			part = ORC_CHOOSE(syllables, recur(&r));
 			part_len = strlen(part);
 			memcpy(n, part, part_len), n += part_len, name_size -= part_len;
 			no_syllables--;
 		}
-		part = suffixes[recur(&r) / (RAND_MAX / suffixes_size + 1)];
+		part = ORC_CHOOSE(suffixes, recur(&r));
 		part_len = strlen(part);
 		memcpy(n, part, part_len), n += part_len, name_size -= part_len;
 	}
 	*n = '\0';
-	*name = (char)toupper(*name);
+	*name = (char)toupper((unsigned char)*name);
 }
 
+#undef ORC_RAND
+
+/* Murmur callbacks. */
+#if ORC_LEQ_LONG_BITS
 /** <https://github.com/aappleby/smhasher> `src/MurmurHash3.cpp fmix64`.
  @return Recurrence on `k`. */
 static unsigned long fmix_long(unsigned long k) {
@@ -106,33 +118,41 @@ static unsigned long fmix_long(unsigned long k) {
 	k ^= k >> 33;
 	return k;
 }
+#else
+#error Get more mixing functions.
+#endif
 
 /* Advances `r`.
- @return Number in `[0, RAND_MAX]`. @implements `orcish_recur` */
-static unsigned murmur_recur(unsigned long *const r)
+ @return Number in `[0, RAND_MAX]`. @implements `orcish` */
+static unsigned murmur_callback(unsigned long *const r)
 	{ return (*r = fmix_long(*r)) % (1lu + RAND_MAX); }
 
 /** Uses `rand`; ignores `r` and uses a global variable set by `srand`.
- @return Number in `[0, RAND_MAX]`. @implements `orcish_recur` */
-static unsigned rand_recur(unsigned long *const r)
+ @return Number in `[0, RAND_MAX]`. @implements `orcish` */
+static unsigned rand_callback(unsigned long *const r)
 	{ (void)r; return (unsigned)rand(); }
 
 /** Fills `name` with a random Orcish name. Potentially up to `name_size` - 1,
- then puts a null terminator. Uses `rand` from `stdlib.h`.
+ (with a maximum of 255,) then puts a null terminator. Uses `rand` from
+ `stdlib.h`.
+ @param[name] A valid pointer to at least `name_size` characters.
  @param[name_size] If zero, does nothing. */
-void orcish(char *const name, const size_t name_size)
-	{ orcish_recur(name, name_size, 0, &rand_recur); }
+void orc_name(char *const name, const size_t name_size)
+	{ assert(name); orcish(name, name_size, 0, &rand_callback); }
 
-/** Fills `name` with a deterministic Orcish name based on `p`. Potentially up
- to `name_size` - 1, then puts a null terminator.
+/** Fills `name` with a deterministic Orcish name based on `p`, or if `p` is
+ null, then "null". Potentially up to `name_size` - 1, (with a maximum of 255,)
+ then puts a null terminator.
+ @param[name] A valid pointer to at least `name_size` characters.
  @param[name_size] If zero, does nothing. */
-void orcish_ptr(char *const name, const size_t name_size,
-	const void *const p) {
-	assert(name);
-	if(!p) {
-		if(!name_size) return;
+void orc_ptr(char *const name, const size_t name_size, const void *const p) {
+	assert(name || !name_size);
+	if(p) {
+		orcish(name, name_size, (unsigned long)p, &murmur_callback);
+	} else {
 		switch(name_size) {
-		default:
+		case 0: return;
+		default: /* _Sic_; `name_size > 5` has enough. Fall-through. */
 		case 5: name[3] = 'l';
 		case 4: name[2] = 'l';
 		case 3: name[1] = 'u';
@@ -140,17 +160,18 @@ void orcish_ptr(char *const name, const size_t name_size,
 		case 1: break;
 		}
 		name[name_size < 5 ? name_size - 1 : 4] = '\0';
-	} else {
-		orcish_recur(name, name_size, (unsigned long)p, &murmur_recur);
 	}
 }
 
-/** Fills a static buffer of up to four names with a deterministic Orcish name
- based on `p` with <fn:orcish_ptr>. */
-const char *orc(const void *const p) {
-	static char strs[4][12];
-	static unsigned str;
-	str %= sizeof strs / sizeof *strs;
-	orcish_ptr(strs[str], sizeof *strs, p);
-	return strs[str++];
+/** Call <fn:orc_ptr> with `p` with default values and a small temporary buffer.
+ @return A temporary string; can handle four names at a time. */
+const char *orcify(const void *const p) {
+	/* If one gets a compile error, then choose another `ORC_LEQ_LONG_BITS` at
+	 the beginning of the file. */
+	static char names[4
+		* (sizeof(unsigned long) * CHAR_BIT >= ORC_LEQ_LONG_BITS)][10];
+	static unsigned n;
+	n %= sizeof names / sizeof *names;
+	orc_ptr(names[n], sizeof *names, p);
+	return names[n++];
 }

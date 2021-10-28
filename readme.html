@@ -67,15 +67,7 @@
 
 <tr><td align = right>void</td><td><a href = "#fn:orcish_ptr">orcish_ptr</a></td><td>name, name_size, p</td></tr>
 
-<tr><td align = right>void</td><td><a href = "#fn:orcish_int">orcish_int</a></td><td>name, name_size, i</td></tr>
-
-<tr><td align = right>void</td><td><a href = "#fn:orcish_long">orcish_long</a></td><td>name, name_size, l</td></tr>
-
-<tr><td align = right>const char *</td><td><a href = "#fn:orc">orc</a></td><td>p</td></tr>
-
-<tr><td align = right>const char *</td><td><a href = "#fn:orc_int">orc_int</a></td><td>i</td></tr>
-
-<tr><td align = right>const char *</td><td><a href = "#fn:orc_long">orc_long</a></td><td>l</td></tr>
+<tr><td align = right>const char *</td><td><a href = "#fn:orcify">orcify</a></td><td>p</td></tr>
 
 </table>
 
@@ -117,61 +109,16 @@
 
 <div>
 
-<h3><a id = "fn:orcish_int" name = "fn:orcish_int">orcish_int</a></h3>
+<h3><a id = "fn:orcify" name = "fn:orcify">orcify</a></h3>
 
-<p><code>void <strong>orcish_int</strong>(char *const <em>name</em>, const size_t <em>name_size</em>, const unsigned <em>i</em>)</code></p>
+<p><code>const char *<strong>orcify</strong>(const void *const <em>p</em>)</code></p>
 
-<p>Fills <code>name</code> with a deterministic Orcish name based on <code>i</code>. Potentially up to <code>name_size</code> - 1, then puts a null terminator.</p>
-
-<dl>
-	<dt>Parameter: <em>name_size</em></dt>
-	<dd>If zero, does nothing.</dd>
-</dl>
-
-</div>
-
-<div>
-
-<h3><a id = "fn:orcish_long" name = "fn:orcish_long">orcish_long</a></h3>
-
-<p><code>void <strong>orcish_long</strong>(char *const <em>name</em>, const size_t <em>name_size</em>, const unsigned long <em>l</em>)</code></p>
-
-<p>Fills <code>name</code> with a deterministic Orcish name based on <code>l</code>. Potentially up to <code>name_size</code> - 1, then puts a null terminator.</p>
+<p>A convenient way to call <a href = "#fn:orcish_ptr">orcish_ptr</a> with <code>p</code>.</p>
 
 <dl>
-	<dt>Parameter: <em>name_size</em></dt>
-	<dd>If zero, does nothing.</dd>
+	<dt>Return:</dt>
+	<dd>A string in a small temporary buffer that can handle four names at a time.</dd>
 </dl>
-
-</div>
-
-<div>
-
-<h3><a id = "fn:orc" name = "fn:orc">orc</a></h3>
-
-<p><code>const char *<strong>orc</strong>(const void *const <em>p</em>)</code></p>
-
-<p>Fills a static buffer of up to four names with a deterministic Orcish name based on <code>p</code> with <a href = "#fn:orcish_ptr">orcish_ptr</a>.</p>
-
-</div>
-
-<div>
-
-<h3><a id = "fn:orc_int" name = "fn:orc_int">orc_int</a></h3>
-
-<p><code>const char *<strong>orc_int</strong>(const unsigned <em>i</em>)</code></p>
-
-<p>Fills a static buffer of up to four names with a deterministic Orcish name based on <code>i</code>.</p>
-
-</div>
-
-<div>
-
-<h3><a id = "fn:orc_long" name = "fn:orc_long">orc_long</a></h3>
-
-<p><code>const char *<strong>orc_long</strong>(const unsigned long <em>l</em>)</code></p>
-
-<p>Fills a static buffer of up to four names with a deterministic Orcish name based on <code>l</code>.</p>
 
 </div>
 

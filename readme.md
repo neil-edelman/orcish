@@ -27,15 +27,7 @@ Orcish names originate or are inspired by [JRR Tolkien's Orcish](http://en.wikip
 
 <tr><td align = right>void</td><td><a href = "#user-content-fn-9f378872">orcish_ptr</a></td><td>name, name_size, p</td></tr>
 
-<tr><td align = right>void</td><td><a href = "#user-content-fn-d7a266c9">orcish_int</a></td><td>name, name_size, i</td></tr>
-
-<tr><td align = right>void</td><td><a href = "#user-content-fn-d9cde336">orcish_long</a></td><td>name, name_size, l</td></tr>
-
-<tr><td align = right>const char *</td><td><a href = "#user-content-fn-a01df6a5">orc</a></td><td>p</td></tr>
-
-<tr><td align = right>const char *</td><td><a href = "#user-content-fn-6b4ff17f">orc_int</a></td><td>i</td></tr>
-
-<tr><td align = right>const char *</td><td><a href = "#user-content-fn-e3a93f48">orc_long</a></td><td>l</td></tr>
+<tr><td align = right>const char *</td><td><a href = "#user-content-fn-2ce9da4d">orcify</a></td><td>p</td></tr>
 
 </table>
 
@@ -67,51 +59,15 @@ Fills `name` with a deterministic Orcish name based on `p`\. Potentially up to `
 
 
 
-### <a id = "user-content-fn-d7a266c9" name = "user-content-fn-d7a266c9">orcish_int</a> ###
+### <a id = "user-content-fn-2ce9da4d" name = "user-content-fn-2ce9da4d">orcify</a> ###
 
-<code>void <strong>orcish_int</strong>(char *const <em>name</em>, const size_t <em>name_size</em>, const unsigned <em>i</em>)</code>
+<code>const char *<strong>orcify</strong>(const void *const <em>p</em>)</code>
 
-Fills `name` with a deterministic Orcish name based on `i`\. Potentially up to `name_size` \- 1, then puts a null terminator\.
+A convenient way to call [orcish_ptr](#user-content-fn-9f378872) with `p`\.
 
- * Parameter: _name\_size_  
-   If zero, does nothing\.
+ * Return:  
+   A string in a small temporary buffer that can handle four names at a time\.
 
-
-
-
-### <a id = "user-content-fn-d9cde336" name = "user-content-fn-d9cde336">orcish_long</a> ###
-
-<code>void <strong>orcish_long</strong>(char *const <em>name</em>, const size_t <em>name_size</em>, const unsigned long <em>l</em>)</code>
-
-Fills `name` with a deterministic Orcish name based on `l`\. Potentially up to `name_size` \- 1, then puts a null terminator\.
-
- * Parameter: _name\_size_  
-   If zero, does nothing\.
-
-
-
-
-### <a id = "user-content-fn-a01df6a5" name = "user-content-fn-a01df6a5">orc</a> ###
-
-<code>const char *<strong>orc</strong>(const void *const <em>p</em>)</code>
-
-Fills a static buffer of up to four names with a deterministic Orcish name based on `p` with [orcish_ptr](#user-content-fn-9f378872)\.
-
-
-
-### <a id = "user-content-fn-6b4ff17f" name = "user-content-fn-6b4ff17f">orc_int</a> ###
-
-<code>const char *<strong>orc_int</strong>(const unsigned <em>i</em>)</code>
-
-Fills a static buffer of up to four names with a deterministic Orcish name based on `i`\.
-
-
-
-### <a id = "user-content-fn-e3a93f48" name = "user-content-fn-e3a93f48">orc_long</a> ###
-
-<code>const char *<strong>orc_long</strong>(const unsigned long <em>l</em>)</code>
-
-Fills a static buffer of up to four names with a deterministic Orcish name based on `l`\.
 
 
 

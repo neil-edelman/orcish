@@ -57,50 +57,107 @@ static const unsigned suffixes_max_length = 7;
 
 static const unsigned max_name_size = 256;
 
-#define ORC_SAMPLE(array, seed) (assert((seed) <= RAND_MAX), \
-	(array)[(seed) / (RAND_MAX / (sizeof (array) / sizeof *(array)) + 1)])
+static unsigned long exptbl[] = {
+	(unsigned long)(         1.00000 * (1u + RAND_MAX)), /* 0 */
+	(unsigned long)(         2.71828 * (1u + RAND_MAX)), /* 1 */
+	(unsigned long)(         7.38906 * (1u + RAND_MAX)), /* 2 */
+	(unsigned long)(        20.08554 * (1u + RAND_MAX)), /* 3 */
+	(unsigned long)(        54.59815 * (1u + RAND_MAX)), /* 4 */
+	(unsigned long)(       148.41316 * (1u + RAND_MAX)), /* 5 */
+	(unsigned long)(       403.42879 * (1u + RAND_MAX)), /* 6 */
+	(unsigned long)(      1096.63316 * (1u + RAND_MAX)), /* 7 */
+	(unsigned long)(      2980.95799 * (1u + RAND_MAX)), /* 8 */
+	(unsigned long)(      8103.08393 * (1u + RAND_MAX)), /* 9 */
+	(unsigned long)(     22026.46579 * (1u + RAND_MAX)), /* 10 */
+	(unsigned long)(     59874.14172 * (1u + RAND_MAX)), /* 11 */
+	(unsigned long)(    162754.79142 * (1u + RAND_MAX)), /* 12 */
+	(unsigned long)(    442413.39201 * (1u + RAND_MAX)), /* 13 */
+	(unsigned long)(   1202604.28416 * (1u + RAND_MAX)), /* 14 */
+	(unsigned long)(   3269017.37247 * (1u + RAND_MAX)), /* 15 */
+	(unsigned long)(   8886110.52051 * (1u + RAND_MAX)), /* 16 */
+	(unsigned long)(  24154952.75358 * (1u + RAND_MAX)), /* 17 */
+	(unsigned long)(  65659969.13733 * (1u + RAND_MAX)), /* 18 */
+	(unsigned long)( 178482300.96319 * (1u + RAND_MAX)), /* 19 */
+	(unsigned long)( 485165195.40979 * (1u + RAND_MAX)), /* 20 */
+	(unsigned long)(1318815734.48321 * (1u + RAND_MAX)), /* 21 */
+	(unsigned long)(3584912846.13159 * (1u + RAND_MAX)), /* 22 */
+};
+static const size_t size_tbl = sizeof exptbl / sizeof *exptbl;
+
+#include <math.h>
+void orc_stats(void) {
+	size_t i, s, t;
+
+	/* Junhao, based on Knuth */
+	size_t k = 0, p = RAND_MAX;
+	int expected = 5, left = expected, step = 50;
+	printf("p=%lu\n", p);
+	do {
+		k++, printf("k=%lu\n", k);
+		p = p * (size_t)rand() / RAND_MAX, printf("p=%lu\n", p);
+		while(p < RAND_MAX && left > 0) {
+			if(left > step) {
+				p *= step;
+				left -= step;
+			} else {
+				if(left >= size_tbl) left = size_tbl - 1;
+				p = p * exptbl[left] / RAND_MAX;
+				left = 0;
+			}
+		}
+	} while(p > RAND_MAX);
+	printf("k - 1 = %lu\n", k - 1);
+
+	for(i = 0; i < 23; i++) {
+		printf("\t(unsigned long)(%16.5f * (1u + RAND_MAX)), /* %lu */\n", exp(i), i);
+	}
+
+	for(s = 0, i = 0; i < sizeof syllables / sizeof *syllables; i++)
+		s += strlen(syllables[i]);
+	printf("syl: %lu / %lu = %f\n", s, i, (double)s / i);
+
+	for(s = 0, i = 0; i < sizeof suffixes / sizeof *suffixes; i++)
+		if(s < (t = strlen(suffixes[i]))) s = t;
+	printf("suf: max %lu\n", s);
+}
+
 /** Fills `name` with a random Orcish name. Potentially up to `name_size` - 1,
  (if zero, does nothing) then puts a null terminator. Uses `r` plugged into
  `recur` to generate random values in the range of `[0, RAND_MAX]`. */
-static void orcish(char *const name, size_t name_size,
+static void orc_rand(char *const name, const size_t name_size,
 	unsigned long r, unsigned (*recur)(unsigned long *)) {
-	char *n = name;
+#define ORC_SAMPLE(array, seed) (assert((seed) <= RAND_MAX), \
+	(array)[(seed) / (RAND_MAX / (sizeof (array) / sizeof *(array)) + 1)])
+	unsigned len, part_len, descend = 1u + RAND_MAX, limit, x = 0;
 	const char *part;
-	size_t part_len;
-	assert(name);
+	char *n = name;
+	assert((name || !name_size) && recur);
 	if(!name_size) { return; }
 	else if(name_size == 1) { *n = '\0'; return; }
-	else if(name_size > max_name_size) { name_size = max_name_size; }
-	/* Now `name_size \in [2, max_name_size]`. */
-	if(name_size <= syllables_max_length + suffixes_max_length) {
-		part = ORC_SAMPLE(syllables, recur(&r));
-		part_len = strlen(part);
-		if(part_len >= name_size) part_len = name_size - 1;
-		memcpy(n, part, part_len), n += part_len, name_size -= part_len;
-		if(name_size > suffixes_max_length) {
-			part = ORC_SAMPLE(suffixes, recur(&r));
-			part_len = strlen(part);
-			memcpy(n, part, part_len), n += part_len, name_size -= part_len;
-		}
-	} else {
-		unsigned no_syllables = ((unsigned)name_size - 1 - suffixes_max_length)
-			/ syllables_max_length;
-		while(no_syllables) {
-			part = ORC_SAMPLE(syllables, recur(&r));
-			part_len = strlen(part);
-			memcpy(n, part, part_len), n += part_len, name_size -= part_len;
-			no_syllables--;
-		}
-		part = ORC_SAMPLE(suffixes, recur(&r));
-		part_len = strlen(part);
-		memcpy(n, part, part_len), n += part_len, name_size -= part_len;
-	}
+	/* The length of space we have to fill syllables. */
+	len = (name_size < max_name_size ? (unsigned)name_size : max_name_size) - 1;
+	len = len > suffixes_max_length ? len - suffixes_max_length : 0;
+	printf("starting len = %u\n", len);
+	/* Knuth's Poisson distribution with fixed point, RAND_MAX ~ 1. */
+	limit = /* e^{-rate} */RAND_MAX / 222;
+	do {
+		x++;
+		part_len = (unsigned)strlen(part = ORC_SAMPLE(syllables, recur(&r)));
+		if(part_len > len) part_len = len; /* Clip. */
+		memcpy(n, part, (size_t)part_len), n += part_len, len -= part_len;
+	} while(len > syllables_max_length + suffixes_max_length
+		&& (descend = (unsigned)((unsigned long)recur(&r) * descend / RAND_MAX))
+		> limit);
+	part_len = (unsigned)strlen(part = ORC_SAMPLE(suffixes, recur(&r)));
+	if(part_len > len) part_len = len; /* Clip. */
+	memcpy(n, part, (size_t)part_len), n += part_len, len -= part_len;
 	*n = '\0';
 	*name = (char)toupper((unsigned char)*name);
+	printf("Size %lu: rand %u.\n", name_size, x);
+#undef ORC_SAMPLE
 }
-#undef ORC_RAND
 
-#if ULONG_MAX <= 0xffffffff || ULONG_MAX < 0xffffffffffffffff
+#if ULONG_MAX <= 0xffffffff || ULONG_MAX < 0xffffffffffffffff /* <!-- !long */
 /** <https://github.com/aappleby/smhasher> `src/MurmurHash3.cpp fmix32`.
  @return Recurrence on `h`. */
 static unsigned long fmix(unsigned long h) {
@@ -111,7 +168,7 @@ static unsigned long fmix(unsigned long h) {
 	h ^= h >> 16;
 	return h;
 }
-#else /* long --><!-- !long */
+#else /* !long --><!-- long */
 /** <https://github.com/aappleby/smhasher> `src/MurmurHash3.cpp fmix64`.
  @return Recurrence on `k`. */
 static unsigned long fmix(unsigned long k) {
@@ -122,7 +179,7 @@ static unsigned long fmix(unsigned long k) {
 	k ^= k >> 33;
 	return k;
 }
-#endif /* !long --> */
+#endif /* long --> */
 
 /* Advances `r`.
  @return Number in `[0, RAND_MAX]`. @implements `orcish` */
@@ -139,8 +196,19 @@ static unsigned rand_callback(unsigned long *const r)
  `stdlib.h`.
  @param[name] A valid pointer to at least `name_size` characters.
  @param[name_size] If zero, does nothing. */
-void orc_name(char *const name, const size_t name_size)
-	{ assert(name); orcish(name, name_size, 0, &rand_callback); }
+void orc_name(char *const name, const size_t name_size) {
+	assert(name || !name_size);
+	orc_rand(name, name_size, 0, &rand_callback);
+}
+
+/** Fills `name` with a deterministic Orcish name based on `l`, potentially
+ up to `name_size` - 1, (with a maximum of 255,) then puts a null terminator.
+ @param[name] A valid pointer to at least `name_size` characters.
+ @param[name_size] If zero, does nothing. */
+void orc_long(char *const name, const size_t name_size, const unsigned long l) {
+	assert(name || !name_size);
+	orc_rand(name, name_size, l, &murmur_callback);
+}
 
 /** Fills `name` with a deterministic Orcish name based on `p`, or if `p` is
  null, then "null". Potentially up to `name_size` - 1, (with a maximum of 255,)
@@ -150,7 +218,9 @@ void orc_name(char *const name, const size_t name_size)
 void orc_ptr(char *const name, const size_t name_size, const void *const p) {
 	assert(name || !name_size);
 	if(p) {
-		orcish(name, name_size, (unsigned long)p, &murmur_callback);
+		/* There will be data lost in the upper bits if
+		 `sizeof(unsigned long) < sizeof(void *)`, but it's probably okay? */
+		orc_long(name, name_size, (unsigned long)p);
 	} else {
 		switch(name_size) {
 		case 0: return;

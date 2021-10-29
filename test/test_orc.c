@@ -15,6 +15,7 @@ int main(void) {
 
 	assert(sizeof test_ver >= sizeof test256); /* _Etc_. */
 
+	orc_name(0, 0);
 	orc_name(test1, 0);
 
 	for(i = 0; i < 8; i++) {
@@ -68,6 +69,7 @@ int main(void) {
 		a = orcify(0), b = orcify(0);
 		printf("<%s> == <%s>\n", a, b), assert(!strcmp(a, b));
 	}
+	orc_stats();
 
 	return EXIT_SUCCESS;
 }

@@ -6,7 +6,7 @@
 #include <string.h> /* strcmp */
 #include <time.h>
 #include <assert.h>
-#include "../src/orc.h"
+#include "../src/orcish.h"
 
 /** @return Zero. */
 int main(void) {
@@ -18,18 +18,17 @@ int main(void) {
 	assert(sizeof test_ver >= sizeof test256); /* _Etc_. */
 
 	srand(seed), fprintf(stderr, "Seed %u.\n", seed);
-	orc_name(test16, sizeof test16);
 
-	orc_name(0, 0);
-	orc_name(test1, 0);
+	orcish(0, 0);
+	orcish(test1, 0);
 
 	for(i = 0; i < 8; i++) {
-		orc_name(test1, sizeof test1);
-		orc_name(test2, sizeof test2);
-		orc_name(test5, sizeof test5);
-		orc_name(test11, sizeof test11);
-		orc_name(test16, sizeof test16);
-		orc_name(test256, sizeof test256);
+		orcish(test1, sizeof test1);
+		orcish(test2, sizeof test2);
+		orcish(test5, sizeof test5);
+		orcish(test11, sizeof test11);
+		orcish(test16, sizeof test16);
+		orcish(test256, sizeof test256);
 		printf("<%s> <%s> <%s> <%s> <%s> <%s>\n", test1, test2, test5, test11,
 			test16, test256);
 	}

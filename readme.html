@@ -65,7 +65,9 @@
 
 <tr><td align = right>void</td><td><a href = "#fn:orcish">orcish</a></td><td>name, name_size</td></tr>
 
-<tr><td align = right>void</td><td><a href = "#fn:orcish_ptr">orcish_ptr</a></td><td>name, name_size, p</td></tr>
+<tr><td align = right>void</td><td><a href = "#fn:orc_long">orc_long</a></td><td>name, name_size, l</td></tr>
+
+<tr><td align = right>void</td><td><a href = "#fn:orc_ptr">orc_ptr</a></td><td>name, name_size, p</td></tr>
 
 <tr><td align = right>const char *</td><td><a href = "#fn:orcify">orcify</a></td><td>p</td></tr>
 
@@ -83,9 +85,11 @@
 
 <p><code>void <strong>orcish</strong>(char *const <em>name</em>, const size_t <em>name_size</em>)</code></p>
 
-<p>Fills <code>name</code> with a random Orcish name. Potentially up to <code>name_size</code> - 1, then puts a null terminator. Uses <code>rand</code> from <code>stdlib.h</code>.</p>
+<p>Fills <code>name</code> with a random Orcish name. Potentially up to <code>name_size</code> - 1, (with a maximum of 255,) then puts a null terminator. Uses <code>rand</code> from <code>stdlib.h</code>.</p>
 
 <dl>
+	<dt>Parameter: <em>name</em></dt>
+	<dd>A valid pointer to at least <code>name_size</code> characters.</dd>
 	<dt>Parameter: <em>name_size</em></dt>
 	<dd>If zero, does nothing.</dd>
 </dl>
@@ -94,13 +98,32 @@
 
 <div>
 
-<h3><a id = "fn:orcish_ptr" name = "fn:orcish_ptr">orcish_ptr</a></h3>
+<h3><a id = "fn:orc_long" name = "fn:orc_long">orc_long</a></h3>
 
-<p><code>void <strong>orcish_ptr</strong>(char *const <em>name</em>, const size_t <em>name_size</em>, const void *const <em>p</em>)</code></p>
+<p><code>void <strong>orc_long</strong>(char *const <em>name</em>, const size_t <em>name_size</em>, const unsigned long <em>l</em>)</code></p>
 
-<p>Fills <code>name</code> with a deterministic Orcish name based on <code>p</code>. Potentially up to <code>name_size</code> - 1, then puts a null terminator.</p>
+<p>Fills <code>name</code> with a deterministic Orcish name based on <code>l</code>, potentially up to <code>name_size</code> - 1, (with a maximum of 255,) then puts a null terminator.</p>
 
 <dl>
+	<dt>Parameter: <em>name</em></dt>
+	<dd>A valid pointer to at least <code>name_size</code> characters.</dd>
+	<dt>Parameter: <em>name_size</em></dt>
+	<dd>If zero, does nothing.</dd>
+</dl>
+
+</div>
+
+<div>
+
+<h3><a id = "fn:orc_ptr" name = "fn:orc_ptr">orc_ptr</a></h3>
+
+<p><code>void <strong>orc_ptr</strong>(char *const <em>name</em>, const size_t <em>name_size</em>, const void *const <em>p</em>)</code></p>
+
+<p>Fills <code>name</code> with a deterministic Orcish name based on <code>p</code>, or if <code>p</code> is null, then "null". Potentially up to <code>name_size</code> - 1, (with a maximum of 255,) then puts a null terminator.</p>
+
+<dl>
+	<dt>Parameter: <em>name</em></dt>
+	<dd>A valid pointer to at least <code>name_size</code> characters.</dd>
 	<dt>Parameter: <em>name_size</em></dt>
 	<dd>If zero, does nothing.</dd>
 </dl>
@@ -113,11 +136,11 @@
 
 <p><code>const char *<strong>orcify</strong>(const void *const <em>p</em>)</code></p>
 
-<p>A convenient way to call <a href = "#fn:orcish_ptr">orcish_ptr</a> with <code>p</code>.</p>
+<p>Call <a href = "#fn:orc_ptr">orc_ptr</a> with <code>p</code> with default values and a small temporary buffer.</p>
 
 <dl>
 	<dt>Return:</dt>
-	<dd>A string in a small temporary buffer that can handle four names at a time.</dd>
+	<dd>A temporary string; can handle four names at a time.</dd>
 </dl>
 
 </div>
@@ -128,7 +151,7 @@
 
 <h2><a id = "license:" name = "license:">License</a></h2>
 
-<p>2014, 2021 Neil Edelman, distributed under the terms of the <a href = "https://opensource.org/licenses/MIT">MIT License</a>. Contains some syllables from <a href = "http://www.smaug.org/">SMAUG</a>, which is a derivative of <a href = "http://dikumud.com/Children/merc2.asp">Merc</a>, and <a href = "http://dikumud.com/">DikuMud</a>; used under fair-use. Contains <a href = "https://github.com/aappleby/smhasher">MurmurHash</a>-derived code, placed in public domain by Austin Appleby.</p>
+<p>2014 Neil Edelman, distributed under the terms of the <a href = "https://opensource.org/licenses/MIT">MIT License</a>. Contains some syllables from <a href = "http://www.smaug.org/">SMAUG</a>, which is a derivative of <a href = "http://dikumud.com/Children/merc2.asp">Merc</a>, and <a href = "http://dikumud.com/">DikuMud</a>; used under fair-use. Contains <a href = "https://github.com/aappleby/smhasher">MurmurHash</a>-derived code, placed in public domain by Austin Appleby.</p>
 
 </div>
 

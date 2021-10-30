@@ -56,16 +56,18 @@ static const char *suffixes[] = {
 
 static const unsigned max_name_size = 128;
 
-/** This is Poisson process popularized by Knuth and uses floating point; the
- values were too small to reliably use fixed point.
+/** This is Poisson process in a similar manner to that proposed by Knuth. It
+ uses floating point; the values were too small to reliably use fixed point.
  @return A random number based on the expectation value `expect`.
  @order \O(`expect`) */
 static unsigned poisson(double expect,
 	unsigned long *const r, unsigned (*recur)(unsigned long *)) {
-	double limit = exp(-expect), prod = 1.0 * recur(r) / RAND_MAX;
+	const double limit = exp(-expect);
+	double prod = 1.0 * recur(r) / RAND_MAX;
 	unsigned n;
+	/* These are orc-specific; ensures that we don't spend too much time. */
 	assert(expect >= 0.0 && expect < 128.0 && r && recur);
-	for(n = 0; limit <= prod; n++) prod *= 1.0 * recur(r) / RAND_MAX;
+	for(n = 0; prod >= limit; n++) prod *= 1.0 * recur(r) / RAND_MAX;
 	return n;
 }
 
@@ -80,7 +82,6 @@ static void orc_rand(char *const name, const size_t name_size,
 	assert((name || !name_size) && recur);
 
 	if(!name_size) { return; }
-	printf("name:");
 	if(name_size == 1) { goto terminate; }
 	len = (name_size < max_name_size ? (unsigned)name_size : max_name_size) - 1;
 
@@ -106,7 +107,6 @@ static void orc_rand(char *const name, const size_t name_size,
 
 	/* While we can still fit syllables. */
 	for( ; ; ) {
-		printf(" x");
 		syl_len = (unsigned)strlen(syl = ORC_SAMPLE(syllables, recur(&r)));
 		if(syl_len > len) break;
 		memcpy(n, syl, (size_t)syl_len), n += syl_len, len -= syl_len;
@@ -120,7 +120,6 @@ capitalize:
 	*name = (char)toupper((unsigned char)*name);
 terminate:
 	*n = '\0';
-	printf(" %s.\n", name);
 }
 
 #if ULONG_MAX <= 0xffffffff || ULONG_MAX < 0xffffffffffffffff /* <!-- !long */

@@ -4,6 +4,7 @@
 #include <stdlib.h> /* malloc free */
 #include <stdio.h>  /* fprintf */
 #include <string.h> /* strcmp */
+#include <time.h>
 #include <assert.h>
 #include "../src/orc.h"
 
@@ -12,8 +13,12 @@ int main(void) {
 	int i;
 	char test1[1], test2[2], test5[5], test11[11], test16[16], test256[256],
 		test_ver[256];
+	const unsigned seed = (unsigned)clock();
 
 	assert(sizeof test_ver >= sizeof test256); /* _Etc_. */
+
+	srand(seed), fprintf(stderr, "Seed %u.\n", seed);
+	orc_name(test16, sizeof test16);
 
 	orc_name(0, 0);
 	orc_name(test1, 0);
@@ -69,7 +74,6 @@ int main(void) {
 		a = orcify(0), b = orcify(0);
 		printf("<%s> == <%s>\n", a, b), assert(!strcmp(a, b));
 	}
-	orc_stats();
 
 	return EXIT_SUCCESS;
 }

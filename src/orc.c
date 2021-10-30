@@ -39,7 +39,6 @@ static const char *syllables[] = {
 	"udu", "ski", "kri", "gal", "nash", "naz", "hai", "mau", "sha", "akh",
 	"dum", "olog", "lab", "lat"
 };
-static const unsigned syllables_max_length = 4;
 
 static const char *suffixes[] = {
 	"at", "ob", "agh", "uk", "uuk", "um", "uurz", "hai", "ishi", "ub", "ull",
@@ -54,17 +53,18 @@ static const char *suffixes[] = {
 	"thrak", "golug", "mokum", "ufum", "bubhosh", "gimbat", "shai", "khalok",
 	"kurta", "ness", "funda"
 };
-static const unsigned suffixes_max_length = 7;
 
-static const unsigned max_name_size = 256;
+static const unsigned max_name_size = 128;
 
-/** This uses floating point.
+/** This is Poisson process popularized by Knuth and uses floating point; the
+ values were too small to reliably use fixed point.
  @return A random number based on the expectation value `expect`.
  @order \O(`expect`) */
-static unsigned poisson(unsigned expect,
+static unsigned poisson(double expect,
 	unsigned long *const r, unsigned (*recur)(unsigned long *)) {
-	double limit = exp(-(double)expect), prod = 1.0 * recur(r) / RAND_MAX;
+	double limit = exp(-expect), prod = 1.0 * recur(r) / RAND_MAX;
 	unsigned n;
+	assert(expect >= 0.0 && expect < 128.0 && r && recur);
 	for(n = 0; limit <= prod; n++) prod *= 1.0 * recur(r) / RAND_MAX;
 	return n;
 }
@@ -74,44 +74,45 @@ static unsigned poisson(unsigned expect,
  `recur` to generate random values in the range of `[0, RAND_MAX]`. */
 static void orc_rand(char *const name, const size_t name_size,
 	unsigned long r, unsigned (*recur)(unsigned long *)) {
-#define ORC_SAMPLE(array, seed) (assert((seed) <= RAND_MAX), \
-	(array)[(seed) / (RAND_MAX / (sizeof (array) / sizeof *(array)) + 1)])
 	unsigned len, syl_len, suf_len, ten_len;
 	const char *syl, *suf;
 	char *n = name;
 	assert((name || !name_size) && recur);
 
-	printf("__orc_rand size %lu__\n", (unsigned long)name_size);
 	if(!name_size) { return; }
+	printf("name:");
 	if(name_size == 1) { goto terminate; }
 	len = (name_size < max_name_size ? (unsigned)name_size : max_name_size) - 1;
-	printf("len (%u) start.\n", len);
+
+#define ORC_SAMPLE(array, seed) (assert((seed) <= RAND_MAX), \
+	(array)[(seed) / (RAND_MAX / (sizeof (array) / sizeof *(array)) + 1)])
 
 	/* Place the first syllable. */
-	syl_len = (unsigned)strlen(syl = ORC_SAMPLE(suffixes, recur(&r)));
+	syl_len = (unsigned)strlen(syl = ORC_SAMPLE(syllables, recur(&r)));
 	if(syl_len > len) syl_len = len;
 	memcpy(n, syl, (size_t)syl_len), n += syl_len, len -= syl_len;
-	printf("first %s(%u)\n", syl, len);
 	if(!len) goto capitalize;
 
 	/* Choose the suffix, but don't insert it until the end. */
 	suf_len = (unsigned)strlen(suf = ORC_SAMPLE(suffixes, recur(&r)));
 	if(suf_len > len) suf_len = len;
 	len -= suf_len;
-	printf("suffix chosen %.*s(%u)\n", suf_len, suf, len);
 	if(!len) goto suffix;
 
-	/* Reduce the length to a picked Poisson random variable having the
-	 expected value of half the syllable part. */
-	ten_len = poisson((len + syl_len) / 2, &r, recur);
+	/* Reduce the length to a number drawn from a Poisson random variable
+	 having the expected value of half the syllable part. */
+	ten_len = poisson((len + syl_len) / 2.0, &r, recur);
 	if(ten_len < len) { len = ten_len; if(!len) goto suffix; }
 
 	/* While we can still fit syllables. */
 	for( ; ; ) {
+		printf(" x");
 		syl_len = (unsigned)strlen(syl = ORC_SAMPLE(syllables, recur(&r)));
 		if(syl_len > len) break;
 		memcpy(n, syl, (size_t)syl_len), n += syl_len, len -= syl_len;
 	}
+
+#undef ORC_SAMPLE
 
 suffix:
 	memcpy(n, suf, (size_t)suf_len), n += suf_len;
@@ -119,8 +120,7 @@ capitalize:
 	*name = (char)toupper((unsigned char)*name);
 terminate:
 	*n = '\0';
-	printf("__%s__\n", name);
-#undef ORC_SAMPLE
+	printf(" %s.\n", name);
 }
 
 #if ULONG_MAX <= 0xffffffff || ULONG_MAX < 0xffffffffffffffff /* <!-- !long */

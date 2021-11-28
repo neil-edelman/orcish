@@ -41,7 +41,7 @@ Orcish names originate or are inspired by [JRR Tolkien's Orcish](http://en.wikip
 
 <code>void <strong>orcish</strong>(char *const <em>name</em>, const size_t <em>name_size</em>)</code>
 
-Fills `name` with a random Orcish name\. Potentially up to `name_size` \- 1, \(with a maximum of 255,\) then puts a null terminator\. Uses `rand` from `stdlib.h`\.
+Fills `name` with a random Orcish name\. Potentially up to `name_size` \- 1, \(with a maximum of 128,\) then puts a null terminator\. Uses `rand` from `stdlib.h`\.
 
  * Parameter: _name_  
    A valid pointer to at least `name_size` characters\.

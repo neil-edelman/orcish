@@ -1,6 +1,6 @@
 # orcish\.c #
 
-## Name Generator ##
+## Name generator ##
 
  * [Description](#user-content-preamble)
  * [Function Summary](#user-content-summary)

@@ -55,7 +55,7 @@ Fills `name` with a random Orcish name\. Potentially up to `name_size` \- 1, \(w
 
 <code>void <strong>orc_long</strong>(char *const <em>name</em>, const size_t <em>name_size</em>, const unsigned long <em>l</em>)</code>
 
-Fills `name` with a deterministic Orcish name based on `l`, potentially up to `name_size` \- 1, \(with a maximum of 255,\) then puts a null terminator\.
+Fills `name` with a deterministic Orcish name based on `l`, potentially up to `name_size` \- 1, \(with a maximum,\) then puts a null terminator\.
 
  * Parameter: _name_  
    A valid pointer to at least `name_size` characters\.
@@ -69,7 +69,7 @@ Fills `name` with a deterministic Orcish name based on `l`, potentially up to `n
 
 <code>void <strong>orc_ptr</strong>(char *const <em>name</em>, const size_t <em>name_size</em>, const void *const <em>p</em>)</code>
 
-Fills `name` with a deterministic Orcish name based on `p`, or if `p` is null, then "null"\. Potentially up to `name_size` \- 1, \(with a maximum of 255,\) then puts a null terminator\.
+Fills `name` with a deterministic Orcish name based on `p`, or if `p` is null, then "null"\. Potentially up to `name_size` \- 1, \(with a maximum,\) then puts a null terminator\.
 
  * Parameter: _name_  
    A valid pointer to at least `name_size` characters\.

@@ -95,7 +95,7 @@ Call [orc_ptr](#user-content-fn-3f3dd248) with `p` with default values and a sma
 
 ## <a id = "user-content-license" name = "user-content-license">License</a> ##
 
-2014 Neil Edelman, distributed under the terms of the [MIT License](https://opensource.org/licenses/MIT)\. Contains some syllables from [SMAUG](http://www.smaug.org/), which is a derivative of [Merc](http://dikumud.com/Children/merc2.asp), and [DikuMud](http://dikumud.com/); used under fair\-use\. Contains [MurmurHash](https://github.com/aappleby/smhasher)\-derived code, placed in public domain by Austin Appleby\.
+2014 Neil Edelman, distributed under the terms of the [MIT License](https://opensource.org/licenses/MIT)\. Orcish is from JRR Tolkien's work, and some syllables from [SMAUG](http://www.smaug.org/), which is a derivative of [Merc](http://dikumud.com/Children/merc2.asp), and [DikuMud](http://dikumud.com/); used under fair\-use\. Contains [MurmurHash](https://github.com/aappleby/smhasher)\-derived code, placed in public domain by Austin Appleby\.
 
 
 

@@ -10,6 +10,10 @@
 
  Orcish names originate or are inspired by [JRR Tolkien's Orcish
  ](http://en.wikipedia.org/wiki/Languages_constructed_by_J._R._R._Tolkien).
+ <fn:orcify> turns out to be super-useful in debugging. An address in memory
+ is mostly only meaningful to the computer. This allows one to transform that
+ pointer into a deterministic temporary string which is Orcish name that is
+ associated with that object.
 
  @std C89 */
 

@@ -13,7 +13,7 @@
  <fn:orcify> turns out to be super-useful in debugging. An address in memory
  is mostly only meaningful to the computer. This allows one to transform that
  pointer into a deterministic temporary string which is Orcish name that is
- associated with that object.
+ associated with that object without any extra naming framework.
 
  @std C89 */
 
